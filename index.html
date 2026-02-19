@@ -1,0 +1,985 @@
+<!DOCTYPE html><html lang="en" data-scrapbook-source="https://arbitrum-nova.github.io/" data-scrapbook-create="20260219123202414" data-scrapbook-title="Arbitrum Nova — Bridge, Fees, Wallet Setup, RPC, AnyTrust Security, Explorers &amp; Troubleshooting (2026)"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO / EEAT Meta Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Arbitrum Nova — Bridge, Fees, Wallet Setup, RPC, AnyTrust Security, Explorers &amp; Troubleshooting (2026)</title>
+  <meta name="description" content="Arbitrum Nova guide (2026): what Nova is (AnyTrust), how bridging works, wallet setup, fees, RPC endpoints, explorers, security checklist, best practices, Nova vs Arbitrum One, and troubleshooting. Includes runbook, KPIs, and a deep FAQ.">
+  <meta name="author" content="Crypto Finance Experts">
+  <link rel="canonical" href="https://arbitrum-nova.example.com/">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="arbitrum-arb-logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://arbitrum-nova.example.com/">
+  <meta property="og:title" content="Arbitrum Nova — Bridge, Fees, Wallet Setup, RPC, AnyTrust Security &amp; Troubleshooting (2026)">
+  <meta property="og:description" content="Practical Arbitrum Nova guide: bridge, fees, wallet setup, RPC, explorers, safety checklist, and troubleshooting.">
+  <meta property="og:image" content="arbnova.png">
+
+  <!-- Twitter Card -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://arbitrum-nova.example.com/">
+  <meta property="twitter:title" content="Arbitrum Nova — Bridge, Fees, Wallet Setup, RPC, AnyTrust Security (2026)">
+  <meta property="twitter:description" content="Deep Arbitrum Nova guide: AnyTrust model, bridging, fees, RPC, explorers, safety best practices, and FAQs.">
+  <meta property="twitter:image" content="arbnova.png">
+
+  <style>
+    :root{
+      /* Arbitrum-like Blue–White Theme */
+      --primary:#2563EB;        /* blue-600 */
+      --primary-600:#1D4ED8;    /* blue-700 */
+      --primary-700:#1E40AF;    /* blue-800 */
+      --accent:#06B6D4;         /* cyan accent */
+
+      --ink:#0F172A;            /* slate-900 */
+      --muted:#475569;          /* slate-600 */
+      --muted-2:#64748B;        /* slate-500 */
+
+      --bg:#F5F8FF;             /* soft blue-white */
+      --panel:#FFFFFF;
+      --panel-2:#F8FBFF;
+      --line:rgba(15,23,42,.10);
+
+      --ok:#16A34A;
+      --warn:#F59E0B;
+      --error:#DC2626;
+
+      --shadow: 0 18px 44px rgba(2,6,23,.12);
+      --radius:14px;
+      --radius-lg:22px;
+
+      --gap:1.25rem;
+      --gap-lg:2rem;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      color:var(--muted);
+      background:
+        radial-gradient(900px 600px at 12% 0%, rgba(37,99,235,.14), transparent 60%),
+        radial-gradient(900px 600px at 90% 10%, rgba(6,182,212,.12), transparent 60%),
+        radial-gradient(900px 600px at 55% 85%, rgba(30,64,175,.10), transparent 60%),
+        linear-gradient(180deg, #FFFFFF 0%, var(--bg) 45%, #FFFFFF 100%);
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{color:var(--primary); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    img{max-width:100%; height:auto; display:block}
+    .container{max-width:1100px; margin:0 auto; padding:0 1.25rem}
+
+    h1,h2,h3,h4{color:var(--ink); line-height:1.25; margin:0 0 .6rem}
+    h1{
+      font-size:clamp(2rem,4.5vw,3.1rem);
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    h2{
+      font-size:clamp(1.35rem,2.8vw,2rem);
+      margin-top:2.2rem;
+      padding-top:.6rem;
+      border-top:1px solid var(--line);
+    }
+    h3{
+      font-size:clamp(1.05rem,2.2vw,1.3rem);
+      color:#0B2A6B;
+      margin-top:1rem;
+    }
+
+    p,li,td,th{font-size:1rem}
+    .lead{font-size:1.125rem; color:#0F172A}
+    .muted{color:var(--muted)}
+    .muted-2{color:var(--muted-2)}
+
+    header.hero{
+      padding: clamp(2rem,6vw,4rem) 0;
+      background:
+        radial-gradient(700px 420px at 18% 10%, rgba(37,99,235,.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 20%, rgba(6,182,212,.14), transparent 60%),
+        linear-gradient(180deg, rgba(2,6,23,.04), rgba(2,6,23,0) 55%);
+      border-bottom:1px solid var(--line);
+    }
+
+    .hero-grid{
+      display:grid;
+      gap:var(--gap-lg);
+      grid-template-columns:1fr;
+      align-items:stretch;
+    }
+
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,251,255,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      padding:clamp(1rem,3vw,1.75rem);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand-row{
+      display:flex; align-items:center; gap:.9rem;
+      margin-bottom:.75rem
+    }
+    .brand-logo{
+      width:54px;
+      height:54px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(37,99,235,.06);
+      padding:.35rem;
+      object-fit:contain;
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+      flex:0 0 auto;
+    }
+
+    /* SINGLE CTA — centered, bigger, more attractive */
+    .cta-center{
+      display:flex;
+      justify-content:center;
+      margin-top: 1.1rem;
+    }
+    .cta{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.65rem;
+      background: linear-gradient(180deg, var(--primary), var(--primary-700));
+      color:white;
+      padding:1.05rem 2.2rem;
+      border-radius:16px;
+      font-weight:950;
+      letter-spacing:.2px;
+      font-size:1.08rem;
+      border:1px solid rgba(255,255,255,.28);
+      box-shadow:
+        0 18px 44px rgba(37,99,235,.22),
+        0 0 0 6px rgba(37,99,235,.10);
+      transform: translateZ(0);
+      transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+      text-decoration:none;
+    }
+    .cta:hover{
+      text-decoration:none;
+      filter:brightness(1.05);
+      transform: translateY(-2px);
+      box-shadow:
+        0 22px 52px rgba(37,99,235,.26),
+        0 0 0 8px rgba(37,99,235,.12);
+    }
+    .cta:active{transform: translateY(0px); filter:brightness(.98);}
+
+    .note{
+      border-left:3px solid var(--primary);
+      padding:.85rem 1rem;
+      background:rgba(37,99,235,.06);
+      border-radius:12px;
+      color:#0F172A;
+      margin-top:1rem;
+    }
+
+    /* HERO IMAGE — guaranteed to fit within frame */
+    .hero-media{
+      position:relative;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.75);
+    }
+    .hero-media::before{
+      content:"";
+      display:block;
+      padding-top:56.25%; /* 16:9 ratio */
+    }
+    .hero-img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover; /* fill frame cleanly */
+    }
+
+    .content-media{
+      position:relative;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.75);
+      margin-top: 14px;
+    }
+    .content-media::before{
+      content:"";
+      display:block;
+      padding-top:56.25%;
+    }
+    .content-img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    section.step-guide{padding: clamp(2rem,6vw,3.5rem) 0}
+    .steps{display:grid; gap:var(--gap); grid-template-columns:1fr;}
+    .step{
+      background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,251,255,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.2rem;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .step:hover{transform:translateY(-4px); box-shadow:0 18px 34px rgba(2,6,23,.14)}
+    .step .icon{
+      width:54px;height:54px;border-radius:50%;
+      display:inline-grid; place-items:center;
+      background:rgba(37,99,235,.10);
+      margin-bottom:.6rem;
+      color:#0B2A6B;
+      font-weight:950;
+      border:1px solid rgba(15,23,42,.10);
+    }
+
+    main .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,251,255,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.25rem;
+      margin:1.25rem 0;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+    }
+
+    .grid-2{display:grid; gap:var(--gap); grid-template-columns:1fr;}
+    .toc{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(37,99,235,.06), rgba(255,255,255,.75));
+      border-radius:var(--radius);
+      padding:1rem;
+    }
+    .toc strong{color:#0F172A}
+    .toc ul{margin:.5rem 0 0; padding-left:1.1rem}
+    .toc li{margin:.25rem 0}
+    .toc a{font-weight:950}
+
+    table{width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px}
+    th,td{padding:.9rem; border-bottom:1px solid var(--line)}
+    th{
+      background:rgba(37,99,235,.08);
+      color:#0F172A;
+      text-align:left
+    }
+    tr.highlight{background:rgba(37,99,235,.05)}
+    tr:hover{background:rgba(2,6,23,.02)}
+
+    code, .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .inline-code{
+      display:inline-block;
+      padding:.15rem .35rem;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:rgba(2,6,23,.03);
+      color:#0F172A;
+      font-weight:900;
+    }
+
+    .callout-grid{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns:1fr;
+      margin-top: .75rem;
+    }
+    .mini{
+      background:rgba(2,6,23,.02);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1rem;
+    }
+    .kpi-badges{
+      display:flex; flex-wrap:wrap; gap:.55rem; margin-top:.6rem;
+    }
+    .kpi-badges span{
+      border:1px solid rgba(37,99,235,.20);
+      background:rgba(37,99,235,.06);
+      color:#0F172A;
+      padding:.3rem .55rem;
+      border-radius:999px;
+      font-weight:950;
+      font-size:.9rem;
+    }
+
+    .eeat{
+      background:linear-gradient(180deg, rgba(37,99,235,.06), rgba(255,255,255,.75));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:1.25rem;
+      box-shadow: 0 12px 26px rgba(2,6,23,.10);
+    }
+
+    .faq-item{border-bottom:1px solid var(--line); padding: .9rem 0}
+    .faq-button{
+      all:unset; display:flex; justify-content:space-between; align-items:center;
+      width:100%; cursor:pointer; padding:.3rem 0;
+    }
+    .faq-button:focus-visible{outline:2px solid var(--primary)}
+    .faq-button h3{margin:0; font-weight:950}
+    .faq-content{max-height:0; overflow:hidden; transition:max-height .25s ease}
+    .faq-content.open{padding-top:.6rem}
+    .faq-plus{font-weight:950; color:#0B2A6B}
+
+    @media (min-width: 860px){
+      .steps{grid-template-columns: repeat(4, 1fr)}
+      .grid-2{grid-template-columns: 1fr 1fr}
+      .callout-grid{grid-template-columns: 1fr 1fr}
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="hero" role="banner">
+  <div class="container hero-grid">
+    <div class="hero-card" aria-label="Intro">
+      <div class="brand-row">
+        <img class="brand-logo" src="arbitrum-arb-logo.png" alt="Arbitrum logo">
+        <div>
+          <div class="muted" style="font-weight:950; letter-spacing:.2px;">Operational Guide</div>
+          <div class="muted-2" style="font-size:.95rem;">Bridge • Fees • Wallet Setup • RPC • AnyTrust • Troubleshooting</div>
+        </div>
+      </div>
+
+      <h1>Arbitrum Nova</h1>
+      <p class="lead">
+        This is a practical, security-first guide to <strong>Arbitrum Nova</strong>: what Nova is (and what it’s optimized for),
+        how to bridge safely, how fees work, how to add Nova to your wallet, which RPC endpoints and explorers to use,
+        and how to troubleshoot the most common “stuck / missing funds” cases.
+      </p>
+
+      <!-- ONLY ONE BUTTON (centered + bigger) -->
+      <div class="cta-center">
+        <a href="https://portal.arbitrum.io/bridge" class="cta" aria-label="Open Arbitrum Nova">
+          Open Arbitrum Nova
+        </a>
+      </div>
+
+      <div class="note">
+        <strong>Quick rule:</strong> Bridge a small test amount first. Most losses come from fake sites,
+        wrong network selection, or signing approvals you don’t understand.
+      </div>
+    </div>
+
+    <div class="hero-media" aria-hidden="true">
+      <img class="hero-img" src="arbnova.png" alt="Arbitrum Nova hero image">
+    </div>
+  </div>
+</header>
+
+<section class="step-guide" aria-labelledby="how-works">
+  <div class="container">
+    <h2 id="how-works">Arbitrum Nova Workflow: Add → Fund → Use → Verify → Exit</h2>
+    <div class="steps" role="list">
+      <article class="step" role="listitem">
+        <div class="icon">①</div>
+        <h3>Add Arbitrum Nova to your wallet</h3>
+        <p>
+          Configure your wallet with verified network parameters (RPC + chain ID). Only trust official Arbitrum documentation.
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">②</div>
+        <h3>Bridge ETH to Arbitrum Nova (test first)</h3>
+        <p>
+          Use the official Arbitrum Portal bridge, confirm the destination is Nova, and test with a small amount before scaling.
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">③</div>
+        <h3>Use apps on Arbitrum Nova + track fees</h3>
+        <p>
+          Nova is optimized for low fees and throughput. Keep an ETH gas buffer and verify tx state with an explorer.
+        </p>
+      </article>
+      <article class="step" role="listitem">
+        <div class="icon">④</div>
+        <h3>Exit Arbitrum Nova cleanly</h3>
+        <p>
+          Understand the route you used (official bridge vs third-party). Confirm completion on explorers and keep receipts (tx hashes).
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<main class="container" role="main">
+
+  <section class="card toc" aria-label="Table of Contents">
+    <strong>On this page (Arbitrum Nova):</strong>
+    <ul>
+      <li><a href="#overview">Arbitrum Nova overview (what it is &amp; who it’s for)</a></li>
+      <li><a href="#anytrust">Arbitrum Nova AnyTrust security model (DAC) explained</a></li>
+      <li><a href="#fees">Arbitrum Nova fees: what drives cost and why it changes</a></li>
+      <li><a href="#wallet">Arbitrum Nova wallet setup: RPC, chain ID, explorer</a></li>
+      <li><a href="#bridge">Arbitrum Nova bridge: step-by-step safe transfer</a></li>
+      <li><a href="#calculator">Arbitrum Nova fee calculator framework (practical)</a></li>
+      <li><a href="#rpc">Arbitrum Nova RPC: reliability checklist</a></li>
+      <li><a href="#explorers">Arbitrum Nova explorers: how to verify txs</a></li>
+      <li><a href="#minimum">Arbitrum Nova minimum ETH: gas buffer rule</a></li>
+      <li><a href="#comparison">Arbitrum Nova vs Arbitrum One comparison</a></li>
+      <li><a href="#best-practices">Arbitrum Nova best practices: security &amp; hygiene</a></li>
+      <li><a href="#troubleshooting">Arbitrum Nova troubleshooting</a></li>
+      <li><a href="#eeat">Arbitrum Nova authoritative sources (EEAT)</a></li>
+      <li><a href="#faq">Arbitrum Nova FAQ (deep)</a></li>
+    </ul>
+  </section>
+
+  <section class="card" id="overview">
+    <h2>Arbitrum Nova Overview: What Arbitrum Nova Is (and Why It Exists)</h2>
+    <p>
+      <strong>Arbitrum Nova</strong> is an Arbitrum Layer 2 designed for <strong>very low fees</strong> and
+      <strong>high-throughput</strong> consumer applications (social, gaming, high-volume UX).
+      Nova’s key difference is its <strong>AnyTrust</strong> data availability model: it reduces cost by relying on a
+      <strong>Data Availability Committee (DAC)</strong> for data availability instead of always publishing full data to Ethereum.
+    </p>
+
+    <div class="callout-grid" role="list">
+      <div class="mini" role="listitem">
+        <h3>When Arbitrum Nova is a fit</h3>
+        <p class="muted">
+          You want low transaction costs and smooth UX for frequent interactions.
+        </p>
+        <div class="kpi-badges">
+          <span>Low fees</span><span>High throughput</span><span>Consumer apps</span>
+        </div>
+      </div>
+
+      <div class="mini" role="listitem">
+        <h3>Arbitrum Nova trade-off</h3>
+        <p class="muted">
+          AnyTrust adds a DA trust assumption (DAC). Understand this before moving meaningful value.
+        </p>
+        <div class="kpi-badges">
+          <span>AnyTrust DA</span><span>DAC model</span><span>Know the risk</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Reality check:</strong> “Low fees” doesn’t mean “no risk”. Use official links, verify token contracts,
+      and always keep an ETH gas buffer on Arbitrum Nova.
+    </div>
+
+    <div class="content-media">
+      <img class="content-img" src="arb2.png" alt="Arbitrum Nova secondary image">
+    </div>
+  </section>
+
+  <section class="card" id="anytrust">
+    <h2>Arbitrum Nova AnyTrust Security Model: DAC Explained (Plain English)</h2>
+    <p>
+      Arbitrum Nova uses <strong>AnyTrust</strong> to lower fees. In practical terms:
+      Arbitrum Nova still settles to Ethereum, but <strong>data availability</strong> is handled by a
+      <strong>Data Availability Committee (DAC)</strong> rather than always posting full transaction data to L1.
+    </p>
+
+    <h3>What you should care about as a user of Arbitrum Nova</h3>
+    <ul>
+      <li><strong>Fees can be lower</strong> because less data is posted to Ethereum.</li>
+      <li><strong>Risk model differs</strong> vs full rollup DA: you rely on DAC availability assumptions.</li>
+      <li><strong>Operational best practice</strong>: keep “high-value” activity segmented and verified (wallet separation, explorer checks).</li>
+    </ul>
+
+    <div class="note">
+      <strong>Practical takeaway for Arbitrum Nova:</strong> if you’re moving meaningful size, use conservative habits:
+      test transfers, verify on explorers, and avoid unknown contracts.
+    </div>
+  </section>
+
+  <section class="card" id="fees">
+    <h2>Arbitrum Nova Fees: What Drives Arbitrum Nova Transaction Costs</h2>
+    <p>
+      On <strong>Arbitrum Nova</strong>, fees are paid in <strong>ETH</strong>. Costs vary with:
+      network demand, the complexity of the contract call, and (for bridging) Ethereum fee conditions.
+    </p>
+    <ul>
+      <li><strong>Demand:</strong> higher usage can increase base fees.</li>
+      <li><strong>Contract complexity:</strong> swaps/mints are costlier than simple transfers.</li>
+      <li><strong>Bridge context:</strong> moving across chains often depends on L1 confirmations and L1 fees.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Rule for Arbitrum Nova:</strong> budget a buffer. Your “true cost” includes retries and fixes (approvals, revokes, re-bridges).
+    </div>
+  </section>
+
+  <section class="card" id="wallet">
+    <h2>Arbitrum Nova Wallet Setup: RPC, Chain ID, Currency, Explorer</h2>
+    <p>
+      Add <strong>Arbitrum Nova</strong> using official parameters. The commonly used essentials:
+      <span class="inline-code">RPC URL</span> and <span class="inline-code">Chain ID</span>.
+    </p>
+
+    <table aria-label="Arbitrum Nova network parameters">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Network name</td>
+          <td>Arbitrum Nova</td>
+          <td>So you don’t confuse chains</td>
+        </tr>
+        <tr>
+          <td>RPC URL</td>
+          <td><span class="mono">https://nova.arbitrum.io/rpc</span></td>
+          <td>Use official docs; avoid random lists</td>
+        </tr>
+        <tr>
+          <td>Chain ID</td>
+          <td><span class="mono">42170</span></td>
+          <td>Prevents wrong-network sends</td>
+        </tr>
+        <tr>
+          <td>Currency symbol</td>
+          <td>ETH</td>
+          <td>Gas token on Arbitrum Nova</td>
+        </tr>
+        <tr>
+          <td>Explorer</td>
+          <td><span class="mono">https://nova.arbiscan.io</span></td>
+          <td>Fastest way to verify balances/tx</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Safety:</strong> for Arbitrum Nova network settings, only trust official Arbitrum documentation.
+    </div>
+  </section>
+
+  <section class="card" id="bridge">
+    <h2>Arbitrum Nova Bridge: How to Bridge to Arbitrum Nova Safely</h2>
+    <ol>
+      <li><strong>Open the official bridge:</strong> use Arbitrum Portal (bookmark it).</li>
+      <li><strong>Select destination:</strong> confirm the destination is <strong>Arbitrum Nova</strong>.</li>
+      <li><strong>Test first:</strong> bridge a small amount of ETH.</li>
+      <li><strong>Verify:</strong> check your address on a Nova explorer.</li>
+      <li><strong>Scale:</strong> bridge the remaining amount in one or more tranches.</li>
+      <li><strong>Keep a gas buffer:</strong> never bridge “everything” — leave ETH for fixes.</li>
+    </ol>
+
+    <div class="note">
+      <strong>Most common confusion:</strong> users bridged to Arbitrum Nova but their wallet is still set to Ethereum or Arbitrum One.
+      Switch to Arbitrum Nova and refresh, then confirm on the explorer.
+    </div>
+  </section>
+
+  <section class="card" id="calculator">
+    <h2>Arbitrum Nova Fee Calculator Framework: Estimate Real Costs (Not Just “Gas”)</h2>
+    <p>
+      A practical <strong>Arbitrum Nova</strong> cost model estimates your workflow cost (bridge → app actions → potential exit),
+      plus a safety buffer for retries.
+    </p>
+
+    <table aria-label="Arbitrum Nova cost estimation inputs">
+      <thead>
+        <tr>
+          <th>Input</th>
+          <th>Meaning</th>
+          <th>Why it matters on Arbitrum Nova</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Actions</td>
+          <td>Approve, swap, mint, transfer, bridge</td>
+          <td>Different actions consume different gas</td>
+        </tr>
+        <tr>
+          <td>Gas per action</td>
+          <td>Contract complexity estimate</td>
+          <td>Main driver of cost variability</td>
+        </tr>
+        <tr>
+          <td>Network conditions</td>
+          <td>Demand spikes</td>
+          <td>Fees can rise during high usage</td>
+        </tr>
+        <tr>
+          <td>Bridge context</td>
+          <td>L1 confirmations / route fee</td>
+          <td>Bridging can be dominated by L1 costs</td>
+        </tr>
+        <tr>
+          <td>Safety buffer</td>
+          <td>Extra ETH reserved</td>
+          <td>Prevents “stuck without gas” failures</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Rule of thumb (Arbitrum Nova):</strong> keep enough ETH for 3–5 extra transactions beyond your plan
+      (approve, retry, revoke, exit).
+    </div>
+  </section>
+
+  <section class="card" id="rpc">
+    <h2>Arbitrum Nova RPC: Reliability Checklist (When Things Feel Slow)</h2>
+    <p>
+      If a wallet or dApp is lagging on <strong>Arbitrum Nova</strong>, it’s often an RPC issue (rate limits, downtime, caching).
+    </p>
+    <ul>
+      <li><strong>Start with official RPC:</strong> <span class="inline-code">https://nova.arbitrum.io/rpc</span></li>
+      <li><strong>Symptom:</strong> explorer shows tx mined, wallet shows pending → likely RPC/UI lag.</li>
+      <li><strong>Fix:</strong> switch RPC, reconnect wallet, refresh token list, or try another explorer.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Explorer-first debugging:</strong> for Arbitrum Nova, explorers are your truth source; UIs can be wrong or delayed.
+    </div>
+  </section>
+
+  <section class="card" id="explorers">
+    <h2>Arbitrum Nova Explorers: How to Verify Arbitrum Nova Transactions</h2>
+    <div class="grid-2">
+      <div class="mini">
+        <h3>Arbitrum Nova Arbiscan</h3>
+        <p class="muted">
+          Transaction status, token transfers, logs, contract calls.
+          <br>
+          <a href="https://nova.arbiscan.io/" target="_blank" rel="noopener nofollow">Open Nova Arbiscan</a>
+        </p>
+      </div>
+      <div class="mini">
+        <h3>Arbitrum Nova Blockscout</h3>
+        <p class="muted">
+          Alternative explorer UI + contract tooling.
+          <br>
+          <a href="https://arbitrum-nova.blockscout.com/" target="_blank" rel="noopener nofollow">Open Blockscout Nova</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:1rem;">
+      <strong>Fast check:</strong> paste your address → confirm chain (Nova) → confirm token contract → confirm latest transfers.
+    </div>
+  </section>
+
+  <section class="card" id="minimum">
+    <h2>Arbitrum Nova Minimum ETH Needed: The Arbitrum Nova Gas Buffer Rule</h2>
+    <p>
+      On <strong>Arbitrum Nova</strong>, the “minimum” you need is practical: enough ETH to keep operating even when something goes wrong.
+    </p>
+    <ul>
+      <li><strong>Hard minimum:</strong> enough for at least one transaction.</li>
+      <li><strong>Practical minimum:</strong> enough for a handful of actions (approve + execute + retry + revoke + bridge).</li>
+      <li><strong>Safety minimum:</strong> extra ETH so you can recover without emergency re-bridging.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Rule:</strong> never go “all-in” on Arbitrum Nova gas. Leave a buffer on both the origin chain and Nova.
+    </div>
+  </section>
+
+  <section class="card" id="comparison">
+    <h2>Arbitrum Nova vs Arbitrum One: Which Should You Use?</h2>
+    <p>
+      <strong>Arbitrum Nova</strong> focuses on low fees and throughput with AnyTrust DA assumptions.
+      <strong>Arbitrum One</strong> is commonly used for broader DeFi activity and a rollup-style DA model.
+    </p>
+
+    <table aria-label="Arbitrum Nova vs Arbitrum One comparison">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Arbitrum Nova</th>
+          <th>Arbitrum One</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td>Primary goal</td>
+          <td>Very low fees, high-volume UX</td>
+          <td>Broader DeFi ecosystem</td>
+        </tr>
+        <tr>
+          <td>Data availability</td>
+          <td>AnyTrust (DAC-based)</td>
+          <td>Rollup-style posting to L1</td>
+        </tr>
+        <tr>
+          <td>Typical use</td>
+          <td>Gaming/social/consumer apps</td>
+          <td>DeFi + higher-value protocols</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>Decision rule:</strong> use Arbitrum Nova when UX + low cost matter most; consider Arbitrum One for more conservative DA assumptions.
+    </div>
+  </section>
+
+  <section class="card" id="best-practices">
+    <h2>Arbitrum Nova Best Practices: Security, Approvals, and Operational Hygiene</h2>
+    <ul>
+      <li><strong>Bookmark official Arbitrum sites</strong> (Portal, Docs). Avoid ads and clones.</li>
+      <li><strong>Wallet separation:</strong> vault wallet (hardware) + daily dApp wallet.</li>
+      <li><strong>Approvals:</strong> minimal allowances, revoke old approvals periodically.</li>
+      <li><strong>Token safety:</strong> verify token contract addresses on an Arbitrum Nova explorer.</li>
+      <li><strong>Gas buffer:</strong> keep ETH for retries, revokes, and exits.</li>
+      <li><strong>Test first:</strong> first interaction with a new dApp/bridge should be small.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Biggest avoidable risk:</strong> malicious approvals + fake sites. Slow down and verify.
+    </div>
+  </section>
+
+  <section class="card" id="troubleshooting">
+    <h2>Arbitrum Nova Troubleshooting: Common Issues + Fixes</h2>
+
+    <h3>Arbitrum Nova “Funds missing after bridging”</h3>
+    <ul>
+      <li>Switch wallet network to <strong>Arbitrum Nova</strong> and refresh.</li>
+      <li>Check your address on <strong>Nova Arbiscan</strong> or <strong>Blockscout</strong>.</li>
+      <li>Confirm you bridged to Nova (not Arbitrum One).</li>
+    </ul>
+
+    <h3>Arbitrum Nova “Transaction pending”</h3>
+    <ul>
+      <li>Check the tx hash on a Nova explorer (UI can lag).</li>
+      <li>Switch RPC endpoint and reconnect wallet.</li>
+      <li>If the tx is not found, it may not have broadcast—resend only after confirming it’s not mined.</li>
+    </ul>
+
+    <h3>Arbitrum Nova “Swap failed”</h3>
+    <ul>
+      <li>Insufficient gas or approval missing.</li>
+      <li>Slippage too strict or liquidity moved.</li>
+      <li>Retry with smaller size and verify revert info on the explorer.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Explorer-first:</strong> if Arbitrum Nova explorer shows success, your funds are not “lost” — it’s usually network/RPC/UI confusion.
+    </div>
+  </section>
+
+  <section class="eeat" id="eeat" aria-labelledby="eeat-title">
+    <h2 id="eeat-title">Arbitrum Nova Authoritative Sources &amp; References (EEAT)</h2>
+    <p>
+      Use official documentation and reputable third-party monitoring for Arbitrum Nova.
+    </p>
+
+    <h3>Official Arbitrum (Portal / Bridge / Docs)</h3>
+    <ul>
+      <li><a href="https://portal.arbitrum.io/" target="_blank" rel="noopener nofollow">Arbitrum Portal</a></li>
+      <li><a href="https://portal.arbitrum.io/bridge" target="_blank" rel="noopener nofollow">Arbitrum Bridge (Portal)</a></li>
+      <li><a href="https://docs.arbitrum.io/" target="_blank" rel="noopener nofollow">Arbitrum Documentation</a></li>
+      <li><a href="https://docs.arbitrum.io/build-decentralized-apps/reference/node-providers" target="_blank" rel="noopener nofollow">RPC providers (official docs)</a></li>
+      <li><a href="https://docs.arbitrum.io/run-arbitrum-node/data-availability-committees" target="_blank" rel="noopener nofollow">AnyTrust / DAC documentation</a></li>
+    </ul>
+
+    <h3>Arbitrum Nova Explorers</h3>
+    <ul>
+      <li><a href="https://nova.arbiscan.io/" target="_blank" rel="noopener nofollow">Nova Arbiscan</a></li>
+      <li><a href="https://arbitrum-nova.blockscout.com/" target="_blank" rel="noopener nofollow">Blockscout — Arbitrum Nova</a></li>
+    </ul>
+
+    <h3>Independent monitoring / risk overview</h3>
+    <ul>
+      <li><a href="https://l2beat.com/scaling/projects/nova" target="_blank" rel="noopener nofollow">L2BEAT — Arbitrum Nova</a></li>
+    </ul>
+
+    <h3>General security hygiene</h3>
+    <ul>
+      <li><a href="https://ethereum.org/guides/how-to-revoke-token-access/" target="_blank" rel="noopener nofollow">Ethereum.org — Revoke token approvals</a></li>
+      <li><a href="https://revoke.cash/" target="_blank" rel="noopener nofollow">Revoke.cash — Allowance management</a></li>
+      <li><a href="https://blog.openzeppelin.com/" target="_blank" rel="noopener nofollow">OpenZeppelin — Smart contract security</a></li>
+    </ul>
+
+    <div class="note">
+      <strong>About:</strong> Prepared by Crypto Finance Experts as a security-first knowledge base for <em>Arbitrum Nova</em>.
+    </div>
+  </section>
+
+  <section class="card faq-section" aria-labelledby="faq">
+    <h2 id="faq">Arbitrum Nova FAQ: The Most Asked Questions (2026)</h2>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f1" id="b1">
+        <h3>What is Arbitrum Nova used for?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f1" class="faq-content" role="region" aria-labelledby="b1">
+        <p><strong>Arbitrum Nova</strong> is optimized for low fees and high-throughput consumer apps (social/gaming/high-volume interactions). It uses AnyTrust DA to reduce costs while settling to Ethereum.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f2" id="b2">
+        <h3>Is Arbitrum Nova the same as Arbitrum One?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f2" class="faq-content" role="region" aria-labelledby="b2">
+        <p>No. <strong>Arbitrum Nova</strong> uses an AnyTrust (DAC-based) DA model for lower fees, while <strong>Arbitrum One</strong> is the flagship chain commonly used for broader DeFi with a rollup-style DA approach.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f3" id="b3">
+        <h3>What token pays gas on Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f3" class="faq-content" role="region" aria-labelledby="b3">
+        <p><strong>Arbitrum Nova</strong> uses <strong>ETH</strong> for gas. Keep a buffer so you can approve, swap, revoke, and exit.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f4" id="b4">
+        <h3>What is AnyTrust on Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f4" class="faq-content" role="region" aria-labelledby="b4">
+        <p><strong>AnyTrust</strong> on <strong>Arbitrum Nova</strong> means data availability is handled by a DAC instead of always publishing full data to Ethereum. This can reduce fees, but it changes the DA trust assumption compared to “full rollup DA”.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f5" id="b5">
+        <h3>Is Arbitrum Nova safe for large amounts?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f5" class="faq-content" role="region" aria-labelledby="b5">
+        <p>“Safe” depends on your risk tolerance. <strong>Arbitrum Nova</strong> is built for low fees and consumer activity; for meaningful size, use conservative habits (wallet separation, official bridge, explorer verification) and consider whether <strong>Arbitrum One</strong> better matches your DA preference.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f6" id="b6">
+        <h3>How do I add Arbitrum Nova to MetaMask?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f6" class="faq-content" role="region" aria-labelledby="b6">
+        <p>Add a custom network for <strong>Arbitrum Nova</strong> using official parameters. Commonly: RPC <span class="inline-code">https://nova.arbitrum.io/rpc</span>, Chain ID <span class="inline-code">42170</span>, Currency ETH, Explorer <span class="inline-code">https://nova.arbiscan.io</span>.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f7" id="b7">
+        <h3>What is the official Arbitrum Nova bridge?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f7" class="faq-content" role="region" aria-labelledby="b7">
+        <p>The safest default is the official Arbitrum Portal bridge. For <strong>Arbitrum Nova</strong>, always verify the destination network before confirming.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f8" id="b8">
+        <h3>Why don’t my funds show in my wallet on Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f8" class="faq-content" role="region" aria-labelledby="b8">
+        <p>Most often you’re on the wrong chain/account or your RPC is lagging. Switch your wallet to <strong>Arbitrum Nova</strong>, refresh, then confirm your balance on Nova Arbiscan/Blockscout using your address.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f9" id="b9">
+        <h3>How do I check if an Arbitrum Nova transaction succeeded?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f9" class="faq-content" role="region" aria-labelledby="b9">
+        <p>Paste the tx hash or your address into a <strong>Arbitrum Nova</strong> explorer (Nova Arbiscan or Blockscout). Explorers are the most reliable source of truth.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f10" id="b10">
+        <h3>What’s the Arbitrum Nova chain ID?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f10" class="faq-content" role="region" aria-labelledby="b10">
+        <p>The commonly used chain ID for <strong>Arbitrum Nova</strong> is <strong>42170</strong>. Always verify via official docs before adding a network.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f11" id="b11">
+        <h3>Why is my Arbitrum Nova transaction pending forever?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f11" class="faq-content" role="region" aria-labelledby="b11">
+        <p>Usually it’s RPC/UI lag. First check the tx hash on a <strong>Arbitrum Nova</strong> explorer. If it’s mined, your wallet UI is behind. If it’s not found, switch RPC and resend only after confirming you didn’t already broadcast.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f12" id="b12">
+        <h3>Why did my swap fail on Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f12" class="faq-content" role="region" aria-labelledby="b12">
+        <p>Common causes: not enough ETH gas, approval missing, slippage too strict, or liquidity moved. On <strong>Arbitrum Nova</strong>, verify approval and retry with slightly higher slippage or smaller size.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f13" id="b13">
+        <h3>How do I avoid phishing when using Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f13" class="faq-content" role="region" aria-labelledby="b13">
+        <p>Bookmark Arbitrum Portal/Docs, avoid sponsored links, don’t sign blind approvals, and use a separate “daily wallet” for dApps. For <strong>Arbitrum Nova</strong>, verify token contracts on the explorer.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f14" id="b14">
+        <h3>How do I revoke approvals on Arbitrum Nova?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f14" class="faq-content" role="region" aria-labelledby="b14">
+        <p>Use an allowance tool like Revoke.cash and make sure you’re connected to <strong>Arbitrum Nova</strong>. Revoke approvals you don’t need to reduce risk.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f15" id="b15">
+        <h3>Can I use the same wallet address on Arbitrum Nova and Ethereum?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f15" class="faq-content" role="region" aria-labelledby="b15">
+        <p>Yes—EVM chains use the same address format. But balances are chain-specific. Always confirm you’re on <strong>Arbitrum Nova</strong> before sending or signing.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-button" aria-expanded="false" aria-controls="f16" id="b16">
+        <h3>Does Arbitrum Nova have native staking?</h3><span class="faq-plus">+</span>
+      </button>
+      <div id="f16" class="faq-content" role="region" aria-labelledby="b16">
+        <p><strong>Arbitrum Nova</strong> is an L2; it doesn’t work like a delegated-staking L1. Yield opportunities exist only via specific dApps/protocols (DeFi), and those carry smart-contract and market risks.</p>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="container" role="contentinfo" style="padding:2rem 0; border-top:1px solid var(--line); margin-top:2rem">
+  <p class="muted">© 2026 Arbitrum Nova Guide. Educational content with a security-first operational focus.</p>
+</footer>
+
+
+
+
+
+
+
+
+
+</body></html>
